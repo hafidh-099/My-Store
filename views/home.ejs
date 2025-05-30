@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.css">
+
+
+</head>
+<body>
+    <!-- common navbar to all page -->
+    <%- include('./include/navbar.ejs')%>
+    
+    <div>
+        <div class="pt-3 card-container">
+        <% if(products.length>0){ %>
+            <% for(let product of products){ %>
+                <div class="card m-3 custom-card">
+                    <img class="card-img-top card-img" src=<%='../assets'+product.image %>  alt=<%=" product.productName"%> />
+                    <div class="card-body">
+                        <div class="name-price">
+                            <h3 class="card-tittle"> <%=product.productName %></h3>
+                            <h4 class="card-tittle fw-light"> <%=product.price %></h4>
+                        </div>
+                        <div class="btn"> 
+                            <a href="/editproduct/<%= product.id %>" class="btn btn-outline-dark mx-1 mt4 edit-btn">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a class="btn btn-outline-dark mx-1 mt4 edit-btn" href="#">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+           <%}%>
+       <%} else{ %>
+            <div class="m-5 p-5">
+                <h1>No product available</h1>
+                <a href="/addProduct" class="btn btn-outline-dark fs-4 my-3">Add product</a>
+            </div>
+       <% } %>
+        </div>
+    </div>
+</body>
+</html>

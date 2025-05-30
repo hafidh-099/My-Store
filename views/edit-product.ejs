@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit product</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../css/addProduct.css">
+    <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.css">
+</head>
+<body>
+    <%- include('./include/navbar.ejs') %>
+    
+        <div class="container-fluid mt-4 form-container">
+        <form action="addProduct" method="POST" class="w-25">
+            <h2 class="fw-bold fs-3 m-4 mb-2">Edit product</h2>
+            <div class="form-control m-3 p-4">
+                <div class="row">
+                    <div class="col-8 mt-2 mb-3">
+                    <label class="form-label fs-4" for="productname">Product Name</label>
+                    <input class="form-control" type="text" id="productname" name="productname" value="<%= products.productName %>">
+                </div>
+                <div class="col-4 mt-2 mb-3">
+                    <label class="form-label fs-4" for="productprice">Price</label>
+                    <input class="form-control" type="text" id="productprice" name="productprice" value="<%=products.price %>">
+                </div>
+                </div>
+                <div class="my-3">
+                    <label class="form-label" for="image">image</label>
+                    <input class="form-control" type="file" id="image" name="image">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary fs-4 m-3 w-100">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

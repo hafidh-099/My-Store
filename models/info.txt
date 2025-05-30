@@ -1,0 +1,2 @@
+model is created to handle database
+we organise all query in this folder
