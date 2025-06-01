@@ -1,25 +1,25 @@
 //it deal with request and response 
 const Products = require('../models/products');
-let product = [
-    {
-        id:1,
-        productName:"Apple",
-        price:20,
-        image:"./apples.png"
-    },
-    {
-        id:2,
-        productName:"banana",
-        price:30,
-        image:"./bananas.png"
-    },
-    {
-        id:3,
-        productName:"pineapple",
-        price:70,
-        image:"./pineapple.png"
-    },
-]
+// let product = [
+//     {
+//         id:1,
+//         productName:"Apple",
+//         price:20,
+//         image:"./apples.png"
+//     },
+//     {
+//         id:2,
+//         productName:"banana",
+//         price:30,
+//         image:"./bananas.png"
+//     },
+//     {
+//         id:3,
+//         productName:"pineapple",
+//         price:70,
+//         image:"./pineapple.png"
+//     },
+// ]
 
 //to fetch data from the database
 exports.renderProducts=(req,res)=>{
@@ -50,6 +50,24 @@ exports.renderAddProduct = (req,res)=>{
 }
 //edit product
 exports.renderEditProduct=(req,res)=>{
-    // res.send('edit product')
-    res.render('edit-product',{products:product[--req.params.id]})
+    Products.fetchProductsById(req.params.id)
+    .then(([[productData],fieldData])=>{
+       //console.log(productData)
+        // res.send('edit product')
+        //res.render('edit-product',{products:product[--req.params.id]})
+        res.render('edit-product',{products:productData})
+    })
+}
+exports.editProduct =(req,res)=>{
+    const{productname,productprice,image}=req.body;
+    const id = req.params.id;
+    const products = new Products(id,productname,productprice,image)
+    products.editData().then(()=>{
+        res.redirect('/')
+    })
+}
+exports.deleteProduct = (req,res)=>{
+    Products.deleteProductById(req.params.id).then(()=>{
+        res.redirect('/');
+    })
 }

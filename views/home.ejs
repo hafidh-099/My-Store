@@ -20,7 +20,7 @@
         <% if(products.length>0){ %>
             <% for(let product of products){ %>
                 <div class="card m-3 custom-card">
-                    <img class="card-img-top card-img" src=<%='../assets'+product.image %>  alt=<%=" product.productName"%> />
+                    <img class="card-img-top card-img" src=<%='../assets/'+product.image %>  alt=<%=" product.productName"%> />
                     <div class="card-body">
                         <div class="name-price">
                             <h3 class="card-tittle"> <%=product.productName %></h3>
@@ -30,7 +30,7 @@
                             <a href="/editproduct/<%= product.id %>" class="btn btn-outline-dark mx-1 mt4 edit-btn">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <a class="btn btn-outline-dark mx-1 mt4 edit-btn" href="#">
+                            <a class="btn btn-outline-dark mx-1 mt4 edit-btn" href="/delete-product/<%= product.id %>">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         </div>
