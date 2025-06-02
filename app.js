@@ -5,7 +5,8 @@ const path = require('path');
 const addProduct = require('./routes/addProduct');
 const editproduct = require('./routes/editProduct');
 const deleteProduct = require('./routes/deleteProduct');
-const tryCookie = require('./routes/tryCookie')
+const tryCookie = require('./routes/tryCookie');
+const userAuth = require('./routes/userAuth');
 
 app.use(express.urlencoded({ extended: true }));
 // Serve static files from node_modules/bootstrap
@@ -23,6 +24,8 @@ app.use('/',home);
 app.use('/addProduct',addProduct)//url,router
 app.use('/editproduct/',editproduct);
 app.use('/delete-product/',deleteProduct)
+app.use('/',userAuth)
+app.use('/login',userAuth)
 //try cookie
 app.use('/tryCookie',tryCookie)
 

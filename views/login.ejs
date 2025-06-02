@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sig up</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/addProduct.css">
+</head>
+<body>
+    <%- include('./include/navbar.ejs') %>
+        <div class="container-fluid mt-4 form-container">
+        <form action="/login" method="POST" class="w-25" onsubmit="return validatePassword()">
+            <h2 class="fw-bold fs-3 m-4 mb-2">sign-up</h2>
+            <div class="form-control m-3 p-4">
+
+                <div class="row">
+                    <div class="col-12 mt-2 mb-3">
+                        <label class="form-label fs-4" for="username">username <span class="fs-6 text-secondary fst-italic">(email)</span></label>
+                        <input class="form-control" type="text" id="username" name="userName" placeholder="abc@gmai.com">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="form-label fs-4" for="passwordInp">Password</label>
+                    <div class="col-10 mt-2 mb-3">
+                        <input class="form-control" type="password" name="passwd" placeholder="password" id="passwordInp">
+                    </div>
+                    <div class="mt-2 mb-3 col-2 btn">
+                        <i class="bi bi-eye-slash" name="passwordHidden" onclick="toggleDisplay(this)"></i>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary fs-4 m-3 w-100">login</button>
+        </form>
+    </div>
+
+    <script>
+        const passwordInp=document.getElementById('passwordInp');
+        const confirmPasswordInp=document.getElementById('confirmPasswordInp');
+
+        const toggleDisplay=(e)=>{
+            let selectedToggle = e.getAttribute('name')//get attribute name so as we can manipulate it
+            //console.log(selectedToggle)
+
+            switch(selectedToggle){
+                case 'passwordHidden':
+                passwordInp.type='text';//in order to see pasword we must change it type to text
+                e.className='bi bi-eye';//this we change classname to bi-eye
+                e.setAttribute('name','passwordVisible');
+                break
+                case 'passwordVisible':
+                passwordInp.type='password';//so if is password i.e we cant see it
+                e.className='bi bi-eye-slash';
+                e.setAttribute('name','passwordHidden');
+                break;
+            }
+        }
+    </script>
+</body>
+</html>
