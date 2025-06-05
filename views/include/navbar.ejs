@@ -5,20 +5,33 @@
                 <li class="nav-item">
                     <a class="nav-link text-light fs-5 px-3" href="/">Home</a>
                 </li>
+                <% if(isLoggedIn==="true"){ %>
+                    <li class="nav-item">
+                        <a class="nav-link text-light fs-5 px-3" href="/addProduct">add-product</a>
+                    </li>
+                <% }%>
 
-                <li class="nav-item">
-                    <a class="nav-link text-light fs-5 px-3" href="/addProduct">add-product</a>
-                </li>
-            </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-light fs-5 px-3" href="../sign-up">Sign Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light fs-5 px-3" href="../login">Login</a>  
-                    </li>
+                <% if(isLoggedIn==="true") {%>
+                    </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-light fs-5 px-3" href="../logout">Log out</a>
+                            </li>
+                        </ul>
                 </ul>
-            </ul>
+                <% }else{ %>
+
+                </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-light fs-5 px-3" href="../sign-up">Sign Up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light fs-5 px-3" href="../login">Login</a>  
+                        </li>
+                    </ul>
+                </ul>
+                <% } %>
         </div>
     </div>
 </nav>

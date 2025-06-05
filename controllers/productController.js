@@ -23,11 +23,23 @@ const Products = require('../models/products');
 
 //to fetch data from the database
 exports.renderProducts=(req,res)=>{
+    //in order to give limit feature to non login user we must read cookie 
+    //we must get key value pair in order to use it so we convert by use split(split the string in every semicolon).[0] define that we want only element on index 0 which is (isLiggin) then we split again by using =. and take value in index number one
+    //const cookie = req.get("Cookie").split(";")[0].split("=")[1];
+    //we can void all above by using cookie parser and configure at app.js
+   // const cookie = req.cookies; when pass cookie this will not work anymore
+    // const cookie = req.session.isLoggedIn;
+    //now instead of pass cookie we pass global variable
+
     Products.fetchProducts()
     .then(([row,fieldData])=>{
         // console.log(row)
         // console.log(fieldData)
-        res.render('home',{products:row});
+        res.render('home',{
+            products:row,
+            //isLoggedIn:cookie.isLoggedIn//we pass cookie to home.ejs(this will not work with session)
+            isLoggedIn:global.isLoggedIn
+        });
     })
 }
 //post data to database
@@ -44,18 +56,23 @@ exports.postAddProduct = (req,res)=>{
 }
 //add product
 exports.renderAddProduct = (req,res)=>{
+   // const cookie = req.cookies.isLoggedIn;
     // res.send("product add") we supose to render ejs file
-    res.render('add-product')
+    res.render('add-product',{isLoggedIn:global.isLoggedIn})
 
 }
 //edit product
 exports.renderEditProduct=(req,res)=>{
+    //const cookie = req.cookies.isLoggedIn;
     Products.fetchProductsById(req.params.id)
     .then(([[productData],fieldData])=>{
        //console.log(productData)
         // res.send('edit product')
         //res.render('edit-product',{products:product[--req.params.id]})
-        res.render('edit-product',{products:productData})
+        res.render('edit-product',{
+            products:productData,
+            isLoggedIn:global.isLoggedIn
+        })
     })
 }
 exports.editProduct =(req,res)=>{
@@ -71,3 +88,4 @@ exports.deleteProduct = (req,res)=>{
         res.redirect('/');
     })
 }
+//x

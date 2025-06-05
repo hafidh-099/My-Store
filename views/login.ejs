@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sig up</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.css">
@@ -13,7 +13,7 @@
     <%- include('./include/navbar.ejs') %>
         <div class="container-fluid mt-4 form-container">
         <form action="/login" method="POST" class="w-25" onsubmit="return validatePassword()">
-            <h2 class="fw-bold fs-3 m-4 mb-2">sign-up</h2>
+            <h2 class="fw-bold fs-3 m-4 mb-2">Login</h2>
             <div class="form-control m-3 p-4">
 
                 <div class="row">
@@ -26,7 +26,7 @@
                 <div class="row">
                     <label class="form-label fs-4" for="passwordInp">Password</label>
                     <div class="col-10 mt-2 mb-3">
-                        <input class="form-control" type="password" name="passwd" placeholder="password" id="passwordInp">
+                        <input class="form-control" type="password" name="password" placeholder="password" id="passwordInp">
                     </div>
                     <div class="mt-2 mb-3 col-2 btn">
                         <i class="bi bi-eye-slash" name="passwordHidden" onclick="toggleDisplay(this)"></i>
