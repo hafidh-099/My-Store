@@ -45,11 +45,15 @@ exports.renderProducts=(req,res)=>{
 //post data to database
 exports.postAddProduct = (req,res)=>{
     //console.log(req.body)//give undifined so we need body parse middleware to solve this
-    const {productname,productprice,image}=req.body;
+    const {productname,productprice}=req.body;
+    const image =req.file.filename
+    //const image = req.file.originalname; // use filename from multer
+    // console.log(req.file.filename)
     // console.log(req.body)
     // console.log(productname, productprice, image); 
     //create instance of product
     const products = new Products(null,productname,productprice,image);
+   // console.log(req.file)//now we can have buffer .we dont configure it by it own multer can handle it
     products.postData().then(()=>{
         res.redirect('/')//after isert data redirect user to home
     });
@@ -76,7 +80,8 @@ exports.renderEditProduct=(req,res)=>{
     })
 }
 exports.editProduct =(req,res)=>{
-    const{productname,productprice,image}=req.body;
+    const{productname,productprice}=req.body;
+    const image =req.file.filename
     const id = req.params.id;
     const products = new Products(id,productname,productprice,image)
     products.editData().then(()=>{

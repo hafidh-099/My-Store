@@ -1,6 +1,7 @@
 const Users = require("../models/users");
 const JWT = require('jsonwebtoken');
 const { tokenSignature } = require("../utils/gloabal");
+const bcrypt = require('bcrypt')
 
 
 
@@ -10,11 +11,12 @@ exports.renderSignUp = (req, res) => {
   //res.render("sign-up",{isLoggedIn:cookie.isLoggedIn});//this is work for cookie
   res.render("sign-up",{isLoggedIn:global.isLoggedIn});//this work for session
 };
-exports.registerUser = (req, res) => {
+exports.registerUser = async(req, res) => {
     
   //distracture value object
   const { userName, passwd, ConfirmPassword } = req.body;
-  const users = new Users(null, userName, passwd);
+  const hashPassword = await bcrypt.hash(passwd,10)
+  const users = new Users(null, userName, hashPassword);//this data go to the database
 
   users.insertUser().then(() => {
     res.redirect("/");
@@ -26,7 +28,7 @@ exports.renderLogin = (req, res) => {
   res.render("login",{isLoggedIn:global.isLoggedIn});
 };
 // now we create function to validate
-exports.validateLogin = (req, res) => {
+exports.validateLogin = async(req, res) => {
   const { userName, password } = req.body;
 
   Users.fetchUserByName(userName)
@@ -38,7 +40,11 @@ exports.validateLogin = (req, res) => {
             //req.session.isLoggedIn='invalid username'
                return res.redirect("/login");
         }else{
-            if (userCredentials.password === password) {
+          const isMatch = bcrypt.compareSync(password,userCredentials.password);
+          // console.log(userCredentials.password)
+          // console.log(password)
+          // console.log(isMatch)
+            if (isMatch) {
               //if user is success login we generate token else will redirect to login
               const token = JWT.sign(//this token will be used along with every request in server we need middleware to validate it
                 {userName},

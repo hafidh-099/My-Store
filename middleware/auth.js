@@ -13,7 +13,7 @@ exports.auth = (req,res,next)=>{//take three paramiter
     }else{
         try{
             const decodeToken = JWT.verify(token,tokenSignature)
-            console.log(decodeToken) 
+            //console.log(decodeToken) 
             global.isLoggedIn = 'true';//when is succefull login global be true
             next()//this continue sent request so may couse error
         }catch(error){

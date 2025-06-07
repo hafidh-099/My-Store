@@ -1,0 +1,1 @@
+in this folder we store image that is passed by user in .note multer can handle it

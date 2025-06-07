@@ -13,7 +13,7 @@
     <%- include('./include/navbar.ejs') %>
     
         <div class="container-fluid mt-4 form-container">
-        <form action="/editproduct/<%= products.id %>" method="POST" class="w-25">
+        <form action="/editproduct/<%= products.id %>" method="POST" class="w-25" enctype="multipart/form-data">
             <h2 class="fw-bold fs-3 m-4 mb-2">Edit product</h2>
             <div class="form-control m-3 p-4">
                 <div class="row">
