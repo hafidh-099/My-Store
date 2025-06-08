@@ -1,3 +1,4 @@
+
 const express = require("express");
 const home = require("./routes/home");
 const app = express();
@@ -9,8 +10,11 @@ const deleteProduct = require("./routes/deleteProduct");
 const tryCookie = require("./routes/tryCookie");
 const userAuth = require("./routes/userAuth");
 const session = require("express-session");
+const sequelize = require('./utils/database.js')//for sequelize connection
 const database = require("./utils/database");
-const mySqlStore = require("express-mysql-session")(session); //create internal connection & pool to deal with the tabase to store session
+//const mySqlStore = require("express-mysql-session")(session); //create internal connection & pool to deal with the tabase to store session
+//instead fo mySqlStore for sequelize we set -:
+const sequelizeStore=require('connect-session-sequelize')(session.Store)//this will stup session store with seqelize that can be used for express sessin middleware
 const JWT = require("jsonwebtoken"); //for deal with JWT
 app.use(express.static(__dirname));
 app.use(cookieParser()); //this enable to access cookie direct into object literal and it is standard one
@@ -28,6 +32,7 @@ app.use(
 
 const bcrypt = require('bcrypt');
 const multer = require('multer');
+const e = require("express");
 app.use('/images', express.static('images'));
 //This tells Express to serve everything inside the images/ folder at the /images/ route
 const storages = multer.diskStorage({
@@ -89,16 +94,18 @@ app.get("/varifytoken", (req, res) => {
 
 });
 //now we must create store for mysql session
-const options = {
-  connectionLimit: 10, //number of connection can create at once
-  port: 3306,
-  host: "localhost",
-  database: "MyStore",
-  user: "root",
-  password: "12345678",
-  createDatabaseTable: true, //create table automatically with name session if you want to create your own you can put false but you must consider stracture of it
-};
-const sessionStore = new mySqlStore(options);
+// const options = {
+//   connectionLimit: 10, //number of connection can create at once
+//   port: 3306,
+//   host: "localhost",
+//   database: "MyStore",
+//   user: "root",
+//   password: "12345678",
+//   createDatabaseTable: true, //create table automatically with name session if you want to create your own you can put false but you must consider stracture of it
+// };
+// const sessionStore = new mySqlStore(options);
+const sessionStore=new sequelizeStore({db:sequelize});
+sessionStore.sync
 app.use(
   session({
     secret: "it is sectrt", //secret key for session
@@ -127,6 +134,17 @@ app.use("/login", userAuth);
 //try cookie
 app.use("/tryCookie", tryCookie);
 
-app.listen(2000, () => {
-  console.log("server is running...");
-});
+//for sequelize
+sequelize.authenticate().then(()=>{
+  console.log('connection seccess')
+}).catch((erro)=>{
+  console.log('error occure during  connection',erro)
+})
+
+sequelize.sync().then(()=>{//due to sequalize return promise we use then
+  //this proces take a lot of time to create table so we put listen here to ensure server dont start until table is created
+    app.listen(2000, () => {
+      console.log("server is running...");
+    });
+
+})

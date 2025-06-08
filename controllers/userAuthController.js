@@ -15,12 +15,17 @@ exports.registerUser = async(req, res) => {
     
   //distracture value object
   const { userName, passwd, ConfirmPassword } = req.body;
-  const hashPassword = await bcrypt.hash(passwd,10)
-  const users = new Users(null, userName, hashPassword);//this data go to the database
-
-  users.insertUser().then(() => {
-    res.redirect("/");
-  });
+  try {
+    const hashPassword = await bcrypt.hash(passwd,10)
+    //const users = new Users(null, userName, hashPassword);//this data go to the database
+  await Users.insertUserFunc({userName,password:hashPassword})
+    // users.insertUser().then(() => {
+      res.redirect("/");
+    // });
+  } catch (error) {
+    console.error('error occure during register user',error);
+    res.status(500).redirect('/error')
+  }
 };
 exports.renderLogin = (req, res) => {
     const cookie = req.session.isLoggedIn;
@@ -32,7 +37,7 @@ exports.validateLogin = async(req, res) => {
   const { userName, password } = req.body;
 
   Users.fetchUserByName(userName)
-    .then(([[userCredentials],tableInfo]) => {
+    .then((userCredentials) => {
       
         if(!userCredentials){
             //res.cookie("isLoggedIn", "invalidUsername");this is not better uproach for security reason
