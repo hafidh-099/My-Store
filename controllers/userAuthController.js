@@ -1,4 +1,4 @@
-const Users = require("../models/users");
+const Users = require("../models/users.js");  
 const JWT = require('jsonwebtoken');
 const { tokenSignature } = require("../utils/gloabal");
 const bcrypt = require('bcrypt')
@@ -18,7 +18,8 @@ exports.registerUser = async(req, res) => {
   try {
     const hashPassword = await bcrypt.hash(passwd,10)
     //const users = new Users(null, userName, hashPassword);//this data go to the database
-  await Users.insertUserFunc({userName,password:hashPassword})
+    //await Users.insertUserFunc({userName,password:hashPassword})//this is custom function is created from sequalize model
+    await Users.insertUser({userName,password:hashPassword})
     // users.insertUser().then(() => {
       res.redirect("/");
     // });
@@ -36,7 +37,8 @@ exports.renderLogin = (req, res) => {
 exports.validateLogin = async(req, res) => {
   const { userName, password } = req.body;
 
-  Users.fetchUserByName(userName)
+  //Users.fetchUserByName(userName) custom function from model for get username sequelize
+  Users.fetchUserByUserName(userName)
     .then((userCredentials) => {
       
         if(!userCredentials){
@@ -51,7 +53,7 @@ exports.validateLogin = async(req, res) => {
           // console.log(isMatch)
             if (isMatch) {
               //if user is success login we generate token else will redirect to login
-              const token = JWT.sign(//this token will be used along with every request in server we need middleware to validate it
+              const token = JWT.sign(//(we generate token)this token will be used along with every request in server we need middleware to validate it
                 {userName},
                 tokenSignature)
               //now we send token as cookie
@@ -68,8 +70,18 @@ exports.validateLogin = async(req, res) => {
     })
 };
 //functionality for log out
+// exports.logout=(req,res)=>{
+//   //req.session.isLoggedIn ='false' when user log out we must delte cookies
+//   req.session.destroy(req.session.id);
+//   res.redirect('/')
+// }
 exports.logout=(req,res)=>{
-  //req.session.isLoggedIn ='false' when user log out we must delte cookies
-  req.session.destroy(req.session.id);
-  res.redirect('/')
+  req.session.destroy((err)=>{
+    if(err){
+      console.log('error during destroy',err)
+      return res.status(500).send('could not logout')
+    }else{
+      res.redirect('/')
+    }
+  })
 }

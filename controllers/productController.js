@@ -1,6 +1,6 @@
 //it deal with request and response 
 //const Products = require('../models/products');
-const Product = require('../models/products');
+const Product = require('../models/products.js');
 // let product = [
 //     {
 //         id:1,
@@ -35,7 +35,8 @@ exports.renderProducts= async(req,res)=>{//we add async bcs sequelize is async
         // /Products.fetchProducts().then(([row,fieldData])=>{
             // console.log(row)
             // console.log(fieldData)
-            const products = await Product.findAll();
+            // const products = await Product.findAll(); this for sequelize
+            const products = await Product.find();
             res.render('home',{
                 products:products,
                 //isLoggedIn:cookie.isLoggedIn//we pass cookie to home.ejs(this will not work with session)
@@ -51,14 +52,14 @@ exports.renderProducts= async(req,res)=>{//we add async bcs sequelize is async
 exports.postAddProduct = async(req,res)=>{
     try {
         const {productname,productprice}=req.body;
-        console.log(productname, 'and ',productprice)
+        // console.log(productname, 'and ',productprice)
         const image =req.file.filename
         const newProduct = await Product.create({
             productName:productname,
             price:productprice,
-            image
+            image:image
         })
-        console.log(newProduct);
+        //console.log(newProduct);
         //const image = req.file.originalname; // use filename from multer
         // console.log(req.file.filename)
         // console.log(req.body)
@@ -91,7 +92,8 @@ exports.renderEditProduct=async(req,res)=>{
            //console.log(productData)
             // res.send('edit product')
             //res.render('edit-product',{products:product[--req.params.id]})
-            const product  = await Product.findByPk(req.params.id);
+            // const product  = await Product.findByPk(req.params.id);//sequalize
+            const product  = await Product.findById(req.params.id);
             if(product){
                 res.render('edit-product',{
                     products:product,
@@ -112,7 +114,8 @@ exports.editProduct =async(req,res)=>{
         const{productname,productprice}=req.body;
         const image =req.file.filename
         const id = req.params.id;
-        const product = await Product.findByPk(id);
+        // const product = await Product.findByPk(id); sequalize
+        const product = await Product.findById(id);
         if(!product){
             console.log('product not found');
             return res.status(404).send('product not found');
@@ -138,7 +141,8 @@ exports.editProduct =async(req,res)=>{
 exports.deleteProduct = async(req,res)=>{
     try {
         //Products.deleteProductById(req.params.id).then(()=>{
-            await Product.destroy({where:{id:req.params.id}})//destroy used to delete product
+            // await Product.destroy({where:{id:req.params.id}})//destroy used to delete product sequalize
+                await Product.findByIdAndDelete(req.params.id)
             console.log('product deleted succes')
             res.redirect('/');
         // })  
@@ -147,4 +151,3 @@ exports.deleteProduct = async(req,res)=>{
         res.status(500).redirect('/error')
     }
 }
-//x

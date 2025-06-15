@@ -12,6 +12,19 @@ const userAuth = require("./routes/userAuth");
 const session = require("express-session");
 const sequelize = require('./utils/database.js')//for sequelize connection
 const database = require("./utils/database");
+
+
+const mongoose = require('mongoose');
+const mongoStore = require('connect-mongo')//this is used to manage and store user session 
+const dbs = 'mongodb://localhost:27017/mystore'
+
+mongoose.connect(dbs).then(()=>{
+  console.log('connection established')
+}).catch((error)=>console.error('error have been occured',error))
+
+
+
+
 //const mySqlStore = require("express-mysql-session")(session); //create internal connection & pool to deal with the tabase to store session
 //instead fo mySqlStore for sequelize we set -:
 const sequelizeStore=require('connect-session-sequelize')(session.Store)//this will stup session store with seqelize that can be used for express sessin middleware
@@ -33,6 +46,7 @@ app.use(
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const e = require("express");
+const { error } = require("console");
 app.use('/images', express.static('images'));
 //This tells Express to serve everything inside the images/ folder at the /images/ route
 const storages = multer.diskStorage({
@@ -104,15 +118,19 @@ app.get("/varifytoken", (req, res) => {
 //   createDatabaseTable: true, //create table automatically with name session if you want to create your own you can put false but you must consider stracture of it
 // };
 // const sessionStore = new mySqlStore(options);
-const sessionStore=new sequelizeStore({db:sequelize});
-sessionStore.sync
+// const sessionStore=new sequelizeStore({db:sequelize});
+// sessionStore.sync
 app.use(
   session({
     secret: "it is sectrt", //secret key for session
     resave: false, //if it true it will save session in every req but we want save only when page render
     saveUninitialized: false, //save session which is unitialized
     //configure mysql session
-    store: sessionStore,
+    // store: sessionStore, for sequalize
+    store:mongoStore.create({
+      mongooseConnection:mongoose.connection,//so session store can make connection to the database
+      mongoUrl:dbs
+    })
   })
 );
 app.get("/trySession", (req, res) => {
